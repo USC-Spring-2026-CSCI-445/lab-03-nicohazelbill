@@ -56,10 +56,16 @@ class OdometryPublisher:
 
         ######### Your code starts here #########
         # add odometry equations to calculate robot's self.x, self.y, self.theta given encoder valuess
-        delta_left = (self.left_encoder - self.last_left_encoder) / self.TICK_TO_RAD * self.wheel_radius * math.pi
-        delta_right = (self.right_encoder - self.last_right_encoder) / self.TICK_TO_RAD * self.wheel_radius * math.pi
+        delta_left = (self.left_encoder - self.last_left_encoder) * self.TICK_TO_RAD * self.wheel_radius
+        delta_right = (self.right_encoder - self.last_right_encoder) * self.TICK_TO_RAD * self.wheel_radius
+
         delta_s = (delta_left + delta_right) / 2.0
+
+        self.last_left_encoder = self.left_encoder
+        self.last_right_encoder = self.right_encoder
+
         delta_theta = (delta_right - delta_left) / self.wheel_separation
+
         self.x += delta_s * math.cos(self.theta)
         self.y += delta_s * math.sin(self.theta)
         self.theta += delta_theta
